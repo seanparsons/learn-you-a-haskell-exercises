@@ -41,7 +41,16 @@ describe x y =
  
 
 binarySearch :: (Show a, Ord a, Eq a, Monoid b) => (a -> a -> b) -> a -> [a] -> Writer b Bool
-binarySearch = undefined
+binarySearch _ _ [] = return False
+binarySearch describeComparison searchedFor possibleValues = 
+  let
+    middleIndex = div (length possibleValues) 2
+    middle = possibleValues !! middleIndex
+    remainingValues = if middle > searchedFor then take middleIndex possibleValues else drop (middleIndex + 1) possibleValues
+  in if middle == searchedFor then return True else do 
+    _ <- writer (False, describeComparison middle searchedFor)
+    subSearchResult <- binarySearch describeComparison searchedFor remainingValues
+    return subSearchResult
 
 {-
  - Investigate what other functions instead of describe can be passed to the binary search.
