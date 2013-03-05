@@ -1,3 +1,5 @@
+import Data.Monoid
+import Control.Monad.Writer
 {-
  - We are going to write a binary search algorithm, which returns a Writer, so we can record the intermediate steps.
  -
@@ -29,7 +31,14 @@
  -}
 
 describe :: (Show a, Eq a, Ord a) => a -> a -> [String]
-describe x y = undefined
+describe x y = 
+  let 
+    comparison
+      | x == y = " is equal to "
+      | x > y  = " is greater than "
+      | x < y  = " is less than "
+  in [(show x) ++ comparison ++ (show y)]
+ 
 
 binarySearch :: (Show a, Ord a, Eq a, Monoid b) => (a -> a -> b) -> a -> [a] -> Writer b Bool
 binarySearch = undefined
